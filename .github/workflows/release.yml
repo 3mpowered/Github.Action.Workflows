@@ -13,10 +13,15 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.CI_GITHUB_APP_ID }}
+          private-key: ${{ secrets.CI_GITHUB_SECRET }}
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
       - name: use node.js
         uses: actions/setup-node@v4
         with:
@@ -35,6 +40,6 @@ jobs:
         run: npm ci --no-fund
       - name: semantic release
         env:
-          GITHUB_TOKEN: ${{ secrets.CI_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
         run: npx semantic-release
