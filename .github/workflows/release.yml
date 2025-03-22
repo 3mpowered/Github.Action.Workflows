@@ -2,7 +2,9 @@ name: release on nuget
 on:
   workflow_call:
     secrets:
-      CI_GITHUB_TOKEN:
+      CI_GITHUB_APP_ID:
+        required: true
+      CI_GITHUB_SECRET:
         required: true
       NUGET_TOKEN:
         required: true
